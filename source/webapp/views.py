@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
 
 from webapp.forms import PhotoForm
 from webapp.models import Photo
@@ -14,6 +16,7 @@ class IndexView(ListView):
     template_name = 'index.html'
 
 
+@method_decorator(ensure_csrf_cookie, name='dispatch')
 class PhotoDetailView(DetailView):
     model = Photo
     template_name = 'detail.html'

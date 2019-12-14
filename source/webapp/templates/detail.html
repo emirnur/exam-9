@@ -12,10 +12,21 @@
         <p><b>Автор:</b> {{ photo.author }}</p>
         <p><b>Дата создания:</b> {{ photo.created_at }}</p>
         <p><b>Лайки:</b> {{ photo.like_count}}</p>
-        <p><a href="{% url 'webapp:photo_update' photo.pk %}" class="btn btn-primary">Изменить</a></p>
-        <p><a href="{% url 'webapp:photo_delete' photo.pk %}" class="btn btn-danger">Удалить</a></p>
+        {% if request.user.is_authenticated %}
+            <p><a href="{% url 'webapp:photo_update' photo.pk %}" class="btn btn-primary">Изменить</a></p>
+            <p><a href="{% url 'webapp:photo_delete' photo.pk %}" class="btn btn-danger">Удалить</a></p>
+        {% endif %}
     </div>
-    <div class="comment-list">
+    <div class="comment-list" id="comment-list">
+          <div class="form-group">
+            <h4 class="text-center">Add Comment</h4>
+            <input type="text" class="form-control"  placeholder="Enter comment" id="author-text">
+          </div>
+            <button type="submit" class="btn btn-primary" id="comment_add" data-photo-id="{{ photo.id }}" data-author-id="{{ photo.author }}">
+                Add
+            </button>
+
+        <h4 class="text-center">Comments</h4>
         {% for comment in photo.comment_photo.all %}
             <div class="comment">
                 <p><b>Author:</b> {{ comment.author }} <b>Created at:</b> {{ comment.created_at }}</p>
