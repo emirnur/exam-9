@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Фотографии{% endblock %}
+{% block content %}
+    <h1 class="text-center">Фотогалерея</h1>
+    <div class="row">
+        {% for photo in photo_list %}
+            <div class="col col-3">
+                <div class="card">
+                    <img src="{{ photo.photo.url }}" class="card-img-top" alt="photo">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ photo.sign }}</h5>
+                        <p class="card-text">
+                            <span>Created by</span> {{ photo.author}} at {{ photo.created_at }},
+                            <span>likes:</span> {{ photo.like_count }}
+                        </p>
+                        <a href="{% url "webapp:photo_detail" photo.pk %}"
+                           class="btn btn-primary">Посмотреть</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -6,7 +6,7 @@ COUNT = 0
 class Photo(models.Model):
     photo = models.ImageField(upload_to='product_images', verbose_name='Фото')
     sign = models.CharField(max_length=200, verbose_name='Подпись')
-    like_count = models.IntegerField(max_length=20, default=COUNT, verbose_name='Количество лайков')
+    like_count = models.IntegerField(default=COUNT, verbose_name='Количество лайков')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE, verbose_name='Автор',
                              related_name='photo_author')

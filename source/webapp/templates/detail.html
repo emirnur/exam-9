@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}{{ photo.sign }}{% endblock %}
+{% block content %}
+    <div class="text-center">
+        <h1>{{ photo.sign }}</h1>
+        <div class="row">
+            <div class="col col-12 col-sm-10 col-md-8 col-lg-6 m-auto">
+                <img src="{{ photo.photo.url }}" class="img-fluid" alt="photo">
+            </div>
+        </div>
+        <p><b>Автор:</b> {{ photo.author }}</p>
+        <p><b>Дата создания:</b> {{ photo.created_at }}</p>
+        <p><b>Лайки:</b> {{ photo.like_count}}</p>
+        <p><a href="{% url 'webapp:photo_update' photo.pk %}" class="btn btn-primary">Изменить</a></p>
+        <p><a href="{% url 'webapp:photo_delete' photo.pk %}" class="btn btn-danger">Удалить</a></p>
+    </div>
+{% endblock %}
