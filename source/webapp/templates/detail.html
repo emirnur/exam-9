@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block title %}{{ photo.sign }}{% endblock %}
 {% block content %}
     <div class="text-center">
@@ -14,4 +15,19 @@
         <p><a href="{% url 'webapp:photo_update' photo.pk %}" class="btn btn-primary">Изменить</a></p>
         <p><a href="{% url 'webapp:photo_delete' photo.pk %}" class="btn btn-danger">Удалить</a></p>
     </div>
+    <div class="comment-list">
+        {% for comment in photo.comment_photo.all %}
+            <div class="comment">
+                <p><b>Author:</b> {{ comment.author }} <b>Created at:</b> {{ comment.created_at }}</p>
+                <div class="pre">{{ comment.text }}</div>
+                <p class="comment-links">
+                    <a href="">Edit</a>
+                    <a href="">Delete</a>
+                </p>
+            </div>
+        {% empty %}
+            <p>No reviews yet.</p>
+        {% endfor %}
+    </div>
+
 {% endblock %}

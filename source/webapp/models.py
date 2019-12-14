@@ -10,6 +10,13 @@ class Photo(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE, verbose_name='Автор',
                              related_name='photo_author')
+    likes = models.ManyToManyField('auth.User', related_name='like_user')
+
+    def total_likes(self):
+        return self.likes.count()
+
+    # def is_liked(self):
+    #     return self.likes.filter(pk=self.request.user.pk).exists()
 
     def __str__(self):
         return self.sign
