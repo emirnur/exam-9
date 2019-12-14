@@ -1,5 +1,5 @@
-from django.shortcuts import render
 from rest_framework.decorators import action
+from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAuthenticated, DjangoModelPermissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -16,10 +16,13 @@ class CommentViewSet(ModelViewSet):
         if self.request.user.is_authenticated:
             return Comment.objects.all()
 
-    # def get_permissions(self):
-    #     if self.action not in ['update', 'partial_update', 'destroy']:
-    #         return [AllowAny()]
-    #     return [IsAuthenticated()]
+    def get_permissions(self):
+        if self.request.method in SAFE_METHODS:
+            return [AllowAny()]
+        elif self.request.method == 'POST':
+            return [IsAuthenticated()]
+        else:
+            return [DjangoModelPermissions()]
 
     @action(methods=['post'], detail=True)
     def like_up(self, request, pk=None):

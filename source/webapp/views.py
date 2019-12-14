@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from webapp.forms import PhotoForm
 from webapp.models import Photo
@@ -18,7 +19,7 @@ class PhotoDetailView(DetailView):
     template_name = 'detail.html'
 
 
-class PhotoCreateView(CreateView):
+class PhotoCreateView(LoginRequiredMixin, CreateView):
     model = Photo
     template_name = 'create.html'
     form_class = PhotoForm
@@ -33,19 +34,33 @@ class PhotoCreateView(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class PhotoUpdateView(UpdateView):
+class PhotoUpdateView(PermissionRequiredMixin, UpdateView):
     model = Photo
     template_name = 'update.html'
     form_class = PhotoForm
     context_object_name = 'photo'
+    permission_required = 'webapp.change_photo'
 
     def get_success_url(self):
         return reverse('webapp:photo_detail', kwargs={'pk': self.object.pk})
 
+    def has_permission(self):
+        return super().has_permission() or self.photo_author(self.request.user)
 
-class PhotoDeleteView(DeleteView):
+    def photo_author(self, user):
+        return self.get_object().author == user
+
+
+class PhotoDeleteView(PermissionRequiredMixin, DeleteView):
     model = Photo
     template_name = 'delete.html'
     success_url = reverse_lazy('webapp:index')
     context_object_name = 'photo'
+    permission_required = 'webapp.delete_photo'
+
+    def has_permission(self):
+        return super().has_permission() or self.photo_author(self.request.user)
+
+    def photo_author(self, user):
+        return self.get_object().author == user
 
